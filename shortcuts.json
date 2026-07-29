@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "copitch",
+    "title": "Assign to Copitch",
+    "icon": "👨‍⚕️",
+    "type": "person",
+    "target": "COPITCH, JUSTIN"
+  },
+  {
+    "slug": "msk",
+    "title": "Assign to MSK Group",
+    "icon": "🦴",
+    "type": "group",
+    "target": "Group: MSK"
+  }
+]

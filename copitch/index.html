@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assign to Copitch</title>
+  <link rel="icon" href="https://fav.farm/%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F">
+</head>
+<body>
+  <script>
+    (function(){
+      /* 1. Click "Assigned to Group" button */
+      Array.from(document.querySelectorAll('button'))
+        .find(b => b.innerText.includes('Assigned to Group'))
+        ?.click();
+      
+      /* 2. Execute assignment logic */
+      setTimeout(() => {
+        
+        const searchInput = document.getElementById('ug_filter');
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.click();
+          searchInput.value = "COPITCH, JUSTIN";
+          searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+          searchInput.dispatchEvent(new Event('change', { bubbles: true }));
+          
+          setTimeout(() => {
+            const th = Array.from(document.querySelectorAll('th'))
+              .find(th => th.innerText.includes("COPITCH, JUSTIN"));
+            if (th) {
+              th.click();
+              th.querySelector('span')?.click();
+            }
+          }, 300);
+        }
+    
+      }, 500);
+    })();
+  </script>
+</body>
+</html>
