@@ -7,7 +7,7 @@ This repository automatically generates hosted shortcuts and raw bookmarklets ba
 If you want to paste the code directly into your browser's URL field for standard bookmarklets, copy the code blocks below:
 
 
-### 👨‍⚕️ Assign to Copitch
+### 👨‍⚕️ Assign to Justin Copitch
 * **Type:** `person`
 * **Target:** `COPITCH, JUSTIN`
 
