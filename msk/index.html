@@ -6,25 +6,6 @@
   <link rel="icon" href="https://fav.farm/%F0%9F%A6%B4">
 </head>
 <body>
-  <script>
-    (function(){
-      /* 1. Click "Assigned to Group" button */
-      Array.from(document.querySelectorAll('button'))
-        .find(b => b.innerText.includes('Assigned to Group'))
-        ?.click();
-      
-      /* 2. Execute assignment logic */
-      setTimeout(() => {
-        
-        const th = Array.from(document.querySelectorAll('th'))
-          .find(th => th.innerText.includes("Group: MSK"));
-        if (th) {
-          th.click();
-          th.querySelector('span')?.click();
-        }
-    
-      }, 500);
-    })();
-  </script>
+  <script>(function(){Array.from(document.querySelectorAll('button')).find(b=>b.innerText.includes('Assigned to Group'))?.click();setTimeout(()=>{const th=Array.from(document.querySelectorAll('th')).find(th=>th.innerText.includes("Group: MSK"));if(th){th.click();th.querySelector('span')?.click();}},500);})();</script>
 </body>
 </html>

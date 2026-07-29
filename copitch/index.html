@@ -6,36 +6,6 @@
   <link rel="icon" href="https://fav.farm/%F0%9F%91%A8%E2%80%8D%E2%9A%95%EF%B8%8F">
 </head>
 <body>
-  <script>
-    (function(){
-      /* 1. Click "Assigned to Group" button */
-      Array.from(document.querySelectorAll('button'))
-        .find(b => b.innerText.includes('Assigned to Group'))
-        ?.click();
-      
-      /* 2. Execute assignment logic */
-      setTimeout(() => {
-        
-        const searchInput = document.getElementById('ug_filter');
-        if (searchInput) {
-          searchInput.focus();
-          searchInput.click();
-          searchInput.value = "COPITCH, JUSTIN";
-          searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-          searchInput.dispatchEvent(new Event('change', { bubbles: true }));
-          
-          setTimeout(() => {
-            const th = Array.from(document.querySelectorAll('th'))
-              .find(th => th.innerText.includes("COPITCH, JUSTIN"));
-            if (th) {
-              th.click();
-              th.querySelector('span')?.click();
-            }
-          }, 300);
-        }
-    
-      }, 500);
-    })();
-  </script>
+  <script>(function(){Array.from(document.querySelectorAll('button')).find(b=>b.innerText.includes('Assigned to Group'))?.click();setTimeout(()=>{const input=document.getElementById('ug_filter');if(input){input.focus();input.click();input.value="COPITCH, JUSTIN";input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));setTimeout(()=>{const th=Array.from(document.querySelectorAll('th')).find(th=>th.innerText.includes("COPITCH, JUSTIN"));if(th){th.click();th.querySelector('span')?.click();}},300);}},500);})();</script>
 </body>
 </html>

@@ -3,42 +3,18 @@ const path = require('path');
 
 const shortcuts = JSON.parse(fs.readFileSync('./shortcuts.json', 'utf8'));
 
-function generateShortcutHtml(item) {
-  let actionScript = '';
-
+// 1. Helper to generate raw javascript: bookmarklet string
+function generateBookmarkletCode(item) {
   if (item.type === 'person') {
-    // Action for typing into search bar (e.g. for yourself)
-    actionScript = `
-        const searchInput = document.getElementById('ug_filter');
-        if (searchInput) {
-          searchInput.focus();
-          searchInput.click();
-          searchInput.value = ${JSON.stringify(item.target)};
-          searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-          searchInput.dispatchEvent(new Event('change', { bubbles: true }));
-          
-          setTimeout(() => {
-            const th = Array.from(document.querySelectorAll('th'))
-              .find(th => th.innerText.includes(${JSON.stringify(item.target)}));
-            if (th) {
-              th.click();
-              th.querySelector('span')?.click();
-            }
-          }, 300);
-        }
-    `;
+    return `javascript:(function(){Array.from(document.querySelectorAll('button')).find(b=>b.innerText.includes('Assigned to Group'))?.click();setTimeout(()=>{const input=document.getElementById('ug_filter');if(input){input.focus();input.click();input.value=${JSON.stringify(item.target)};input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));setTimeout(()=>{const th=Array.from(document.querySelectorAll('th')).find(th=>th.innerText.includes(${JSON.stringify(item.target)}));if(th){th.click();th.querySelector('span')?.click();}},300);}},500);})();`;
   } else {
-    // Action for direct group selection from the list
-    actionScript = `
-        const th = Array.from(document.querySelectorAll('th'))
-          .find(th => th.innerText.includes(${JSON.stringify(item.target)}));
-        if (th) {
-          th.click();
-          th.querySelector('span')?.click();
-        }
-    `;
+    return `javascript:(function(){Array.from(document.querySelectorAll('button')).find(b=>b.innerText.includes('Assigned to Group'))?.click();setTimeout(()=>{const th=Array.from(document.querySelectorAll('th')).find(th=>th.innerText.includes(${JSON.stringify(item.target)}));if(th){th.click();th.querySelector('span')?.click();}},500);})();`;
   }
+}
 
+// 2. Helper to generate HTML redirect page
+function generateShortcutHtml(item) {
+  const code = generateBookmarkletCode(item);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,24 +23,12 @@ function generateShortcutHtml(item) {
   <link rel="icon" href="https://fav.farm/${encodeURIComponent(item.icon)}">
 </head>
 <body>
-  <script>
-    (function(){
-      /* 1. Click "Assigned to Group" button */
-      Array.from(document.querySelectorAll('button'))
-        .find(b => b.innerText.includes('Assigned to Group'))
-        ?.click();
-      
-      /* 2. Execute assignment logic */
-      setTimeout(() => {
-        ${actionScript}
-      }, 500);
-    })();
-  </script>
+  <script>${code.replace(/^javascript:/, '')}</script>
 </body>
 </html>`;
 }
 
-// 1. Generate individual folders/files
+// 3. Generate individual folders/files for each shortcut
 shortcuts.forEach(item => {
   const dir = path.join(__dirname, item.slug);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
@@ -73,7 +37,7 @@ shortcuts.forEach(item => {
   console.log(`Generated: /${item.slug}/index.html`);
 });
 
-// 2. Generate central dashboard
+// 4. Generate central HTML dashboard
 const dashboardHtml = `<!DOCTYPE html>
 <html>
 <head>
@@ -93,3 +57,26 @@ const dashboardHtml = `<!DOCTYPE html>
 
 fs.writeFileSync('index.html', dashboardHtml);
 console.log('Generated: index.html dashboard');
+
+// 5. Generate README.md with copy-paste bookmarklet code blocks
+const readmeContent = `# ⚡ Assignment Shortcuts
+
+This repository automatically generates hosted shortcuts and raw bookmarklets based on \`shortcuts.json\`.
+
+## 📌 Direct Bookmarklets (Copy & Paste)
+
+If you want to paste the code directly into your browser's URL field for standard bookmarklets, copy the code blocks below:
+
+${shortcuts.map(item => `
+### ${item.icon} ${item.title}
+* **Type:** \`${item.type}\`
+* **Target:** \`${item.target}\`
+
+\`\`\`javascript
+${generateBookmarkletCode(item)}
+\`\`\`
+`).join('\n---\n')}
+`;
+
+fs.writeFileSync('README.md', readmeContent);
+console.log('Generated: README.md with bookmarklet code');
